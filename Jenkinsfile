@@ -11,7 +11,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        sh 'bash ./CI/build.sh'
+        powershell 'bash ./CI/build.sh'
       }
     }
 
