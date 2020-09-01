@@ -27,6 +27,6 @@ pipeline {
     PROJECT_PATH = 'E:/My Code/PersonalProjects/Unity/Unity3D-Jenkins'
     BUILD_NAME = 'Unity3D-Jenkins'
     ARTIFACTS = '_artifacts'
-    BASH = 'C:/Windows/System32/bash.exe'
+    WSL = 'C:/Windows/System32/wsl.exe'
   }
 }
