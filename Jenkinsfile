@@ -11,7 +11,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        bat '%WSL% CI/build.sh'
+        pwsh '%WSL% CI/build.sh'
       }
     }
 
