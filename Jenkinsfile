@@ -11,13 +11,13 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        bat 'bash ./CI/build.sh'
+        bat 'bash -c CI/build.sh'
       }
     }
 
     stage('Archive') {
       steps {
-        sh 'bash ./CI/archivebuild.sh'
+        bat 'bash -c CI/archivebuild.sh'
       }
     }
 
