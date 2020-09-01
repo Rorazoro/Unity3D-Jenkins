@@ -11,13 +11,13 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        pwsh '"$env:WSL" CI/build.sh'
+        bat '%WSL% dos2unix CI/build.sh'
       }
     }
 
     stage('Archive') {
       steps {
-        pwsh '"$env:WSL" CI/archivebuild.sh'
+        pwsh '%WSL% dos2unix CI/archivebuild.sh'
       }
     }
 
