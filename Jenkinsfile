@@ -17,7 +17,7 @@ pipeline {
 
     stage('Archive') {
       steps {
-        bat 'bash -c CI/archivebuild.sh'
+        bat '$BASH -c CI/archivebuild.sh'
       }
     }
 
@@ -27,5 +27,6 @@ pipeline {
     PROJECT_PATH = 'E:/My Code/PersonalProjects/Unity/Unity3D-Jenkins'
     BUILD_NAME = 'Unity3D-Jenkins'
     ARTIFACTS = '_artifacts'
+    BASH = 'C:\Windows\System32\bash.exe'
   }
 }
