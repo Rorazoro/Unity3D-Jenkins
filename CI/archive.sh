@@ -4,6 +4,7 @@ set -x
 echo "Archiving Builds"
 
 cd ..
-mkdir -p $ARTIFACTS
+mkdir -p "$ARTIFACTS"
 cd Builds
-for i in */; do zip -r "${i%/}.zip" "$i"; mv "${i%/}.zip" ../$ARTIFACTS; done
+
+for i in */; do zip -r "${i%/}.zip" "$i"; mv "${i%/}.zip" "$ARTIFACTS"; done
