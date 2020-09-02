@@ -15,7 +15,7 @@ pipeline {
       }
     }
 
-    stage('Build: StandaloneWindows64') {
+    stage('Build: StandaloneLinux64') {
       environment {
         BUILD_TARGET = 'StandaloneLinux64'
       }
@@ -24,7 +24,7 @@ pipeline {
       }
     }
 
-    stage('Build: StandaloneWindows64') {
+    stage('Build: WebGL') {
       environment {
         BUILD_TARGET = 'WebGL'
       }
