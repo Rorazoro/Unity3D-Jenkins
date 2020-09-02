@@ -3,4 +3,4 @@ set PROJECT_PATH=E:/My Code/PersonalProjects/Unity/Unity3D-Jenkins
 set BUILD_NAME=Unity3D-Jenkins
 
 set BUILD_TARGET=StandaloneWindows64
-build.bat
+CI\build.bat

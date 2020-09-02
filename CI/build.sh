@@ -16,7 +16,7 @@ export BUILD_PATH="$PROJECT_PATH/Builds/$BUILD_TARGET"
   -customBuildName $BUILD_NAME \
   -customBuildPath $BUILD_PATH \
   -executeMethod BuildCommand.PerformBuild \
-  -logFile /dev/stdout
+  -logFile buildlog
 
 UNITY_EXIT_CODE=$?
 
