@@ -15,9 +15,30 @@ pipeline {
       }
     }
 
+    stage('Build: StandaloneWindows64') {
+      environment {
+        BUILD_TARGET = 'StandaloneLinux64'
+      }
+      steps {
+        bat 'CI/build.bat'
+      }
+    }
+
+    stage('Build: StandaloneWindows64') {
+      environment {
+        BUILD_TARGET = 'WebGL'
+      }
+      steps {
+        bat 'CI/build.bat'
+      }
+    }
+
     stage('Archive') {
       steps {
         bat 'CI/archive.bat'
+        dir("${ARTIFACTS}") {
+          archiveArtifacts artifacts: '**'
+        }
       }
     }
 
