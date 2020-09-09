@@ -11,7 +11,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        bat 'CI/build.bat'
+        powershell './CI/build.ps1'
       }
     }
 
@@ -20,7 +20,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneLinux64'
       }
       steps {
-        bat 'CI/build.bat'
+        powershell './CI/build.ps1'
       }
     }
 
@@ -29,13 +29,27 @@ pipeline {
         BUILD_TARGET = 'WebGL'
       }
       steps {
-        bat 'CI/build.bat'
+        powershell './CI/build.ps1'
+      }
+    }
+
+    stage('Generate Commit Log') {
+      steps {
+        powershell './CI/generatenotes.ps1'
       }
     }
 
     stage('Archive') {
       steps {
-        bat 'CI/archive.bat'
+        powershell './CI/archive.ps1'
+
+        powershell '''
+          Move-Item -Path 'CI/release_get.sh' -Destination $ARTIFACTS
+          Move-Item -Path 'CI/release_create.sh' -Destination $ARTIFACTS
+          Move-Item -Path 'CI/release_delete.sh' -Destination $ARTIFACTS
+          Move-Item -Path 'CI/release_upload.sh' -Destination $ARTIFACTS
+        '''
+
         dir("${ARTIFACTS}") {
           archiveArtifacts artifacts: '**'
         }
@@ -48,6 +62,5 @@ pipeline {
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = 'Unity3D-Jenkins'
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
-    ZIP = 'D:/Program Files/7-Zip/7z.exe'
   }
 }
