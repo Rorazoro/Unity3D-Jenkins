@@ -2,7 +2,7 @@ Write-Output "Building for $BUILD_TARGET"
 
 $BUILD_PATH = "$PROJECT_PATH/Builds/$BUILD_TARGET/"
 
-Start-Process -FilePath "$UNITY_EXECUTABLE" -ArgumentList @"
+Start-Process -FilePath $UNITY_EXECUTABLE -ArgumentList @"
     -projectPath "$PROJECT_PATH"
     -quit
     -batchmode
