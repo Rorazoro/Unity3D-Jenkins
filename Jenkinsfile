@@ -11,7 +11,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        powershell './CI/build.ps1'
+        println powershell(returnStdout: true, script: './CI/build.ps1')
       }
     }
 
@@ -20,7 +20,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneLinux64'
       }
       steps {
-        powershell './CI/build.ps1'
+        println powershell(returnStdout: true, script: './CI/build.ps1')
       }
     }
 
@@ -29,26 +29,26 @@ pipeline {
         BUILD_TARGET = 'WebGL'
       }
       steps {
-        powershell './CI/build.ps1'
+        println powershell(returnStdout: true, script: './CI/build.ps1')
       }
     }
 
     stage('Generate Commit Log') {
       steps {
-        powershell './CI/generatenotes.ps1'
+        println powershell(returnStdout: true, script: './CI/generatenotes.ps1')
       }
     }
 
     stage('Archive') {
       steps {
-        powershell './CI/archive.ps1'
+        println powershell(returnStdout: true, script: './CI/archive.ps1')
 
-        powershell '''
+        println powershell(returnStdout: true, script: '''
           Move-Item -Path 'CI/release_get.sh' -Destination $ARTIFACTS
           Move-Item -Path 'CI/release_create.sh' -Destination $ARTIFACTS
           Move-Item -Path 'CI/release_delete.sh' -Destination $ARTIFACTS
           Move-Item -Path 'CI/release_upload.sh' -Destination $ARTIFACTS
-        '''
+        ''')
 
         dir("${ARTIFACTS}") {
           archiveArtifacts artifacts: '**'
