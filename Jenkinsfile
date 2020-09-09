@@ -7,16 +7,18 @@ pipeline {
   }
   stages {
     stage('Gather Parameters') {
-      timeout(time: 60, unit: 'SECONDS') {
-        script {
-          def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
-            booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.'),
-            booleanParam(name: 'BUILD_LINUX', defaultValue: true, description: 'If true, we will run StandaloneLinux64 build.'),
-            booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
-          ]
-          env.BUILD_WINDOWS = INPUT_PARAMS.BUILD_WINDOWS
-          env.BUILD_LINUX = INPUT_PARAMS.BUILD_LINUX
-          env.BUILD_WEB = INPUT_PARAMS.BUILD_WEB
+      steps {
+        timeout(time: 60, unit: 'SECONDS') {
+          script {
+            def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
+              booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.'),
+              booleanParam(name: 'BUILD_LINUX', defaultValue: true, description: 'If true, we will run StandaloneLinux64 build.'),
+              booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
+            ]
+            env.BUILD_WINDOWS = INPUT_PARAMS.BUILD_WINDOWS
+            env.BUILD_LINUX = INPUT_PARAMS.BUILD_LINUX
+            env.BUILD_WEB = INPUT_PARAMS.BUILD_WEB
+          }
         }
       }
     }
