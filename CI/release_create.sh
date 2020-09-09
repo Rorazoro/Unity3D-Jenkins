@@ -5,9 +5,9 @@ set -x
 
 VERSION=$1
 BRANCH=$2
-NAME="Test Name"
-BODY="Test Message"
-PRERELEASE=$3
+NAME=$3
+BODY=$4
+PRERELEASE=$5
 
 generate_post_data()
 {
@@ -15,8 +15,8 @@ generate_post_data()
 {
     "tag_name": "$VERSION",
     "target_commitish": "$BRANCH",
-    "name": "$VERSION",
-    "body": "",
+    "name": "$NAME",
+    "body": "$BODY",
     "prerelease": $PRERELEASE
 }
 EOF

@@ -80,6 +80,33 @@ pipeline {
       }
     }
 
+    stage('Gather Deployment Parameters') {
+      steps {
+        timeout(time: 60, unit: 'SECONDS') {
+          script {
+            def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
+              choice(name: 'DEPLOY', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy this build')
+            ]
+            env.DEPLOY = INPUT_PARAMS.DEPLOY
+          }
+        }
+      }
+    }
+
+    stage('Deploy Build') {
+      script {
+        env.COMMITLOG = readFile(file: 'commitlog.txt')
+        env.VERSION = sh 'git describe --tags --abbrev=0'
+      }
+
+      build(job: '/RELEASE-Unity3D-Jenkins', parameters: [
+        string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
+        string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
+        string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
+        text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
+        booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
+      ])
+    }
   }
   environment {
     UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.4f1/Editor/Unity.exe"
