@@ -1,3 +1,8 @@
+$UNITY_EXECUTABLE = $args[0]
+$PROJECT_PATH = $args[1]
+$BUILD_TARGET = $args[2]
+$BUILD_NAME = $args[3]
+
 Write-Output "Building for $BUILD_TARGET"
 
 $BUILD_PATH = "$PROJECT_PATH/Builds/$BUILD_TARGET/"

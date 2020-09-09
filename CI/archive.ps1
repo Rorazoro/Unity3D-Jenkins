@@ -1,3 +1,6 @@
+$PROJECT_PATH = $args[0]
+$ARTIFACTS = $args[1]
+
 Write-Output "Archiving Builds"
 
 if (!(Test-Path "$ARTIFACTS")) {

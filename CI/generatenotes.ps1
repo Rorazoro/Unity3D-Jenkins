@@ -1,3 +1,5 @@
+$ARTIFACTS = $args[0]
+
 # fetch tags, to be sure we have all the require info
 git fetch --tags
 
