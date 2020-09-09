@@ -25,7 +25,7 @@ pipeline {
 
     stage('Build: StandaloneWindows64') {
       when {
-        expression { env.BUILD_WINDOWS == true }
+        expression { return env.BUILD_WINDOWS ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       environment {
         BUILD_TARGET = 'StandaloneWindows64'
@@ -37,7 +37,7 @@ pipeline {
 
     stage('Build: StandaloneLinux64') {
       when {
-        expression { env.BUILD_LINUX == true }
+        expression { return env.BUILD_LINUX ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       environment {
         BUILD_TARGET = 'StandaloneLinux64'
@@ -49,7 +49,7 @@ pipeline {
 
     stage('Build: WebGL') {
       when {
-        expression { env.BUILD_WEB == true }
+        expression { return env.BUILD_WEB ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       environment {
         BUILD_TARGET = 'WebGL'
