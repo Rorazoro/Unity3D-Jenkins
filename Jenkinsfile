@@ -6,7 +6,25 @@ pipeline {
 
   }
   stages {
+    stage('Gather Parameters') {
+      timeout(time: 60, unit: 'SECONDS') {
+        script {
+          def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
+            booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.'),
+            booleanParam(name: 'BUILD_LINUX', defaultValue: true, description: 'If true, we will run StandaloneLinux64 build.'),
+            booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
+          ]
+          env.BUILD_WINDOWS = INPUT_PARAMS.BUILD_WINDOWS
+          env.BUILD_LINUX = INPUT_PARAMS.BUILD_LINUX
+          env.BUILD_WEB = INPUT_PARAMS.BUILD_WEB
+        }
+      }
+    }
+
     stage('Build: StandaloneWindows64') {
+      when {
+        expression { env.BUILD_WINDOWS == true }
+      }
       environment {
         BUILD_TARGET = 'StandaloneWindows64'
       }
@@ -16,6 +34,9 @@ pipeline {
     }
 
     stage('Build: StandaloneLinux64') {
+      when {
+        expression { env.BUILD_LINUX == true }
+      }
       environment {
         BUILD_TARGET = 'StandaloneLinux64'
       }
@@ -25,6 +46,9 @@ pipeline {
     }
 
     stage('Build: WebGL') {
+      when {
+        expression { env.BUILD_WEB == true }
+      }
       environment {
         BUILD_TARGET = 'WebGL'
       }
@@ -33,15 +57,10 @@ pipeline {
       }
     }
 
-    stage('Generate Commit Log') {
-      steps {
-        println powershell(returnStdout: true, script: './CI/generatenotes.ps1 $env:ARTIFACTS')
-      }
-    }
-
     stage('Archive') {
       steps {
         println powershell(returnStdout: true, script: './CI/archive.ps1 $env:PROJECT_PATH $env:ARTIFACTS')
+        println powershell(returnStdout: true, script: './CI/generatenotes.ps1 $env:ARTIFACTS')
 
         println powershell(returnStdout: true, script: '''
           Move-Item -Path 'CI/release_get.sh' -Destination $env:ARTIFACTS
