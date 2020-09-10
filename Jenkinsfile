@@ -94,6 +94,9 @@ pipeline {
     }
 
     stage('Deploy Build') {
+      when {
+        expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
+      }
       steps {
         script {
           env.COMMITLOG = readFile(file: 'commitlog.txt')
@@ -115,5 +118,6 @@ pipeline {
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
+    DEPLOY = false
   }
 }
