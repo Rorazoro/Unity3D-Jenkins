@@ -127,6 +127,11 @@ pipeline {
       }
     }
   }
+  post {
+    always {
+      cleanWs()
+    }
+  }
   environment {
     UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.4f1/Editor/Unity.exe"
     PROJECT_PATH = "${WORKSPACE}"
