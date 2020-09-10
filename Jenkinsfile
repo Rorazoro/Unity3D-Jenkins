@@ -82,12 +82,26 @@ pipeline {
 
     stage('Gather Deployment Parameters') {
       steps {
-        timeout(time: 60, unit: 'SECONDS') {
-          script {
-            def INPUT_PARAMS = input message: 'Should we deploy?', parameters: [
-              booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
-            ]
-            env.DEPLOY = INPUT_PARAMS.DEPLOY
+        script {
+          try {
+            timeout(time: 60, unit: 'SECONDS') {
+              script {
+                def INPUT_PARAMS = input( message: 'Should we deploy?', parameters: [
+                  booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
+                ])
+                env.DEPLOY = INPUT_PARAMS.DEPLOY
+              }
+            }
+          }
+          catch(err) { // timeout reached or input Aborted
+              def user = err.getCauses()[0].getUser()
+                  if('SYSTEM' == user.toString()) { // SYSTEM means timeout
+                      echo ("Input timeout expired, default branch will be used: " + BRANCH_TO_BUILD_DEFAULT)
+                      BRANCH_TO_BUILD_REQUESTED = BRANCH_TO_BUILD_DEFAULT
+                  } else {
+                      echo "Input aborted by: [${user}]"
+                      error("Pipeline aborted by: [${user}]")
+                  }
           }
         }
       }
