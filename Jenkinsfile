@@ -8,7 +8,7 @@ pipeline {
   parameters {
     booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.')
     booleanParam(name: 'BUILD_LINUX', defaultValue: false, description: 'If true, we will run StandaloneLinux64 build.')
-    booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
+    booleanParam(name: 'BUILD_WEB', defaultValue: false, description: 'If true, we will run WebGL build.')
   }
   stages {
     // stage('Gather Parameters') {
@@ -84,8 +84,8 @@ pipeline {
       steps {
         timeout(time: 60, unit: 'SECONDS') {
           script {
-            def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
-              choice(name: 'DEPLOY', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy this build')
+            def INPUT_PARAMS = input message: 'Should we deploy?', parameters: [
+              booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
             ]
             env.DEPLOY = INPUT_PARAMS.DEPLOY
           }
@@ -118,6 +118,5 @@ pipeline {
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
-    DEPLOY = false
   }
 }
