@@ -94,18 +94,20 @@ pipeline {
     }
 
     stage('Deploy Build') {
-      script {
-        env.COMMITLOG = readFile(file: 'commitlog.txt')
-        env.VERSION = sh 'git describe --tags --abbrev=0'
-      }
+      steps {
+        script {
+          env.COMMITLOG = readFile(file: 'commitlog.txt')
+          env.VERSION = sh 'git describe --tags --abbrev=0'
+        }
 
-      build(job: '/RELEASE-Unity3D-Jenkins', parameters: [
-        string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
-        string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
-        string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
-        text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
-        booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
-      ])
+        build(job: '/RELEASE-Unity3D-Jenkins', parameters: [
+          string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
+          string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
+          string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
+          text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
+          booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
+        ])
+      }
     }
   }
   environment {
