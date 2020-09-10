@@ -118,5 +118,6 @@ pipeline {
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
+    DEPLOY = false
   }
 }
