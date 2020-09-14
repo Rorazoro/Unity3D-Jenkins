@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 static class BuildCommand {
     private const string KEYSTORE_PASS = "KEYSTORE_PASS";
@@ -141,6 +142,9 @@ static class BuildCommand {
 
     static void PerformBuild () {
         Console.WriteLine (":: Performing build");
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
 
         var buildTarget = GetBuildTarget ();
 

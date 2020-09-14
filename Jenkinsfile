@@ -7,8 +7,8 @@ pipeline {
   }
   parameters {
     booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.')
-    booleanParam(name: 'BUILD_LINUX', defaultValue: true, description: 'If true, we will run StandaloneLinux64 build.')
-    booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
+    booleanParam(name: 'BUILD_LINUX', defaultValue: false, description: 'If true, we will run StandaloneLinux64 build.')
+    booleanParam(name: 'BUILD_WEB', defaultValue: false, description: 'If true, we will run WebGL build.')
   }
   stages {
     // stage('Gather Parameters') {
@@ -82,18 +82,34 @@ pipeline {
 
     stage('Gather Deployment Parameters') {
       steps {
-        timeout(time: 60, unit: 'SECONDS') {
-          script {
-            def INPUT_PARAMS = input message: 'Please Provide Parameters', parameters: [
-              choice(name: 'DEPLOY', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy this build')
-            ]
-            env.DEPLOY = INPUT_PARAMS.DEPLOY
+        script {
+          try {
+            timeout(time: 60, unit: 'SECONDS') {
+              script {
+                def INPUT_PARAMS = input( message: 'Should we deploy?', parameters: [
+                  booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
+                ])
+                env.DEPLOY = INPUT_PARAMS.DEPLOY
+              }
+            }
+          }
+          catch(err) { // timeout reached or input Aborted
+              def user = err.getCauses()[0].getUser()
+                  if('SYSTEM' == user.toString()) { // SYSTEM means timeout
+                      echo ("Input timeout expired, default action will be used: DEPLOY = false")
+                  } else {
+                      echo "Input aborted by: [${user}]"
+                      error("Pipeline aborted by: [${user}]")
+                  }
           }
         }
       }
     }
 
     stage('Deploy Build') {
+      when {
+        expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
+      }
       steps {
         script {
           env.COMMITLOG = readFile(file: 'commitlog.txt')
@@ -110,8 +126,13 @@ pipeline {
       }
     }
   }
+  post {
+    always {
+      cleanWs()
+    }
+  }
   environment {
-    UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.4f1/Editor/Unity.exe"
+    UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.5f1/Editor/Unity.exe"
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
