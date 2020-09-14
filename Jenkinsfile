@@ -84,7 +84,7 @@ pipeline {
       steps {
         script {
           try {
-            timeout(time: 60, unit: 'SECONDS') {
+            timeout(time: 15, unit: 'MINUTES') {
               script {
                 def INPUT_PARAMS = input( message: 'Should we deploy?', parameters: [
                   booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
