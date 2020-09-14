@@ -62,18 +62,22 @@ pipeline {
       }
     }
 
-    stage('Archive') {
+    stage('Archive Builds') {
       steps {
         println powershell(returnStdout: true, script: './CI/archive.ps1 $env:PROJECT_PATH $env:ARTIFACTS')
-        println powershell(returnStdout: true, script: './CI/generatenotes.ps1 $env:ARTIFACTS')
 
-        println powershell(returnStdout: true, script: '''
-          Move-Item -Path 'CI/release_get.sh' -Destination $env:ARTIFACTS
-          Move-Item -Path 'CI/release_create.sh' -Destination $env:ARTIFACTS
-          Move-Item -Path 'CI/release_delete.sh' -Destination $env:ARTIFACTS
-          Move-Item -Path 'CI/release_upload.sh' -Destination $env:ARTIFACTS
-        ''')
-
+        script {
+          if (env.BRANCH_NAME == 'master') {
+            println powershell(returnStdout: true, script: './CI/generatenotes.ps1 $env:ARTIFACTS')
+            println powershell(returnStdout: true, script: '''
+              Move-Item -Path 'CI/release_get.sh' -Destination $env:ARTIFACTS
+              Move-Item -Path 'CI/release_create.sh' -Destination $env:ARTIFACTS
+              Move-Item -Path 'CI/release_delete.sh' -Destination $env:ARTIFACTS
+              Move-Item -Path 'CI/release_upload.sh' -Destination $env:ARTIFACTS
+            ''')
+          }
+        }
+        
         dir("${ARTIFACTS}") {
           archiveArtifacts artifacts: '**'
         }
@@ -81,6 +85,9 @@ pipeline {
     }
 
     stage('Gather Deployment Parameters') {
+      when {
+        expression { env.BRANCH_NAME == "master"}
+      }
       steps {
         script {
           try {
