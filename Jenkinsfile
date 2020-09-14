@@ -8,7 +8,7 @@ pipeline {
   parameters {
     booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.')
     booleanParam(name: 'BUILD_LINUX', defaultValue: false, description: 'If true, we will run StandaloneLinux64 build.')
-    booleanParam(name: 'BUILD_WEB', defaultValue: false, description: 'If true, we will run WebGL build.')
+    booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
   }
   stages {
     // stage('Gather Parameters') {
