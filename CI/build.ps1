@@ -20,12 +20,12 @@ Start-Process -FilePath $UNITY_EXECUTABLE -ArgumentList @"
 "@
 
 # Wait for Editor.log to be created.
-while (!(Test-Path "${BUILD_TARGET}_buildlog.log")) {
+while (!(Test-Path "$BUILD_TARGET.buildlog.log")) {
     Start-Sleep -m 10
 }
 
 # Output Editor.log until Unity is done.
-Get-Content -Path "${BUILD_TARGET}_buildlog.log" -Tail 1 -Wait | Where-Object {
+Get-Content -Path "$BUILD_TARGET.buildlog.log" -Tail 1 -Wait | Where-Object {
     Write-Host $_
 
     if ($_ -match "Application will terminate with return code") {
