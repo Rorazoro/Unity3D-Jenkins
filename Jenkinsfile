@@ -155,11 +155,11 @@ pipeline {
       }
       steps {
         build(job: '/RELEASE-Unity3D-Jenkins', propagate: false, parameters: [
-          string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
-          string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
-          string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
-          text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
-          booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
+          string(name: 'RELEASE_VERSION', value: env.RELEASE_VERSION),
+          string(name: 'RELEASE_BRANCH', value: env.BRANCH_NAME),
+          string(name: 'RELEASE_NAME', value: env.RELEASE_NAME),
+          text(name: 'RELEASE_BODY', value: env.RELEASE_BODY),
+          booleanParam(name: 'RELEASE_PRE', value: env.RELEASE_PRE)
         ])
       }
     }
@@ -176,3 +176,82 @@ pipeline {
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
   }
 }
+
+//RELEASE PIPELINE CODE
+// pipeline {
+//     agent {
+//         node {
+//           label 'master'
+//         }
+//     }
+//     parameters {
+//         string(name: 'RELEASE_VERSION', defaultValue: "v0.1.0", description: 'Version of tag for release')
+//         string(name: 'RELEASE_BRANCH', defaultValue: 'master', description: 'Branch for release')
+//         string(name: 'RELEASE_NAME', defaultValue: 'v0.1.0', description: 'Name for release')
+//         text(name: 'RELEASE_BODY', defaultValue: '', description: 'Message body for release')
+//         booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
+//     }
+//     environment {
+//         API_TOKEN = credentials('GithubAccessKey')
+//         OWNER = 'rorazoro'
+//         REPO = 'Unity3D-Jenkins'
+//     }
+    
+//     stages {
+//         stage('Copy Artifacts') {
+//             steps {
+//                 echo 'Copy Artifacts'
+//                 script {
+//                     step ([$class: 'CopyArtifact',
+//                         projectName: '/BUILD-Unity3D-Jenkins/master',
+//                         filter: "*",
+//                         target: "${env.WORKSPACE}"]);
+//                 }
+//                 sh 'ls -all'
+//             }
+//         }
+//         stage('Get Release') {
+//             steps {
+//                 script {
+//                     def response = sh(returnStdout: true, script: "./release_get.sh ${params.RELEASE_VERSION}")
+//                     def jsonObj = readJSON(text: response)
+                    
+//                     env.DELETE_RELEASE = false
+//                     if (jsonObj.message != "Not Found") {
+//                         env.RELEASE_ID = jsonObj.id
+//                         env.DELETE_RELEASE = true
+//                     }
+//                 }
+//             }
+//         }
+//         stage('Delete Release') {
+//             when {
+//                 expression { return env.DELETE_RELEASE ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
+//             }
+//             steps {
+//                 script {
+//                     def response = sh(returnStdout: true, script: "./release_delete.sh ${env.RELEASE_ID}")
+//                 }
+//             }
+//         }
+//         stage('Create Release') {
+//             steps {
+//                 script {
+//                     def response = sh(returnStdout: true, script: "./release_create.sh '${params.RELEASE_VERSION}' '${params.RELEASE_BRANCH}' '${params.RELEASE_NAME}' '${params.RELEASE_BODY}' ${params.RELEASE_PRE}")
+//                     def jsonObj = readJSON(text: response)
+//                     env.RELEASE_ID = jsonObj.id
+//                 }
+//             }
+//         }
+//         stage('Upload Release') {
+//             steps {
+//                 script {
+//                     def assets = findFiles(glob: '*.zip')
+//                     assets.each { file ->
+//                         sh(returnStdout: true, script: "./release_upload.sh ${env.RELEASE_ID} '${file.path}'")
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
