@@ -76,7 +76,6 @@ pipeline {
               Move-Item -Path 'CI/release_upload.sh' -Destination $env:ARTIFACTS
             ''')
           }
-          currentBuild.result = "SUCCESS"
         }
         
         dir("${ARTIFACTS}") {
@@ -122,7 +121,6 @@ pipeline {
           try {
             timeout(time: 15, unit: 'MINUTES') {
               script {
-                //env.COMMITLOG = readFile(file: "$ARTIFACTS/commitlog.txt")
                 env.VERSION = powershell(returnStdout: true, script: 'if (git tag -l) { git describe --tags --abbrev=0 }')
 
                 def INPUT_PARAMS = input( message: 'Enter Deployment Parameters', parameters: [
@@ -156,7 +154,7 @@ pipeline {
         expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       steps {
-        build(job: '/RELEASE-Unity3D-Jenkins', parameters: [
+        build(job: '/RELEASE-Unity3D-Jenkins', propagate: false, parameters: [
           string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
           string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
           string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
