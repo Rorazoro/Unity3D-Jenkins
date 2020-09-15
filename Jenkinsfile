@@ -93,10 +93,10 @@ pipeline {
           try {
             timeout(time: 15, unit: 'MINUTES') {
               script {
-                def INPUT_PARAMS = input( message: 'Should we deploy?', parameters: [
+                env.DEPLOY = input( message: 'Should we deploy?', parameters: [
                   booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
                 ])
-                env.DEPLOY = INPUT_PARAMS.DEPLOY
+                //env.DEPLOY = INPUT_PARAMS.DEPLOY
               }
             }
           }
@@ -143,6 +143,5 @@ pipeline {
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
-    DEPLOY = false
   }
 }
