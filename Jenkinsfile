@@ -119,7 +119,7 @@ pipeline {
       }
       steps {
         script {
-          env.COMMITLOG = readFile(file: 'commitlog.txt')
+          env.COMMITLOG = readFile(file: "$ARTIFACTS\commitlog.txt")
           env.VERSION = sh 'git describe --tags --abbrev=0'
         }
 

@@ -4,8 +4,12 @@ $ARTIFACTS = $args[0]
 git fetch --tags
 
 # collect the commits since the last tag
-$GIT_TAG = git describe --tags --abbrev=0
-# Write-Output $GIT_TAG
+if (git tag -l) {
+    $GIT_TAG = git describe --tags --abbrev=0
+    $GIT_RELEASE_NOTES = git log "$GIT_TAG..HEAD" --pretty=format:"%h %s"
+}
+else {
+    $GIT_RELEASE_NOTES = git log --pretty=format:"%h %s"
+}
 
-$GIT_RELEASE_NOTES = git log "$GIT_TAG..HEAD" --pretty=format:"%h %s"
-Write-Output $GIT_RELEASE_NOTES  > "$ARTIFACTS\commitlog.txt"
+Out-File -FilePath "$ARTIFACTS\commitlog.txt" -InputObject $GIT_RELEASE_NOTES
