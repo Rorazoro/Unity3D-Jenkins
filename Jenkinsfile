@@ -96,7 +96,6 @@ pipeline {
                 env.DEPLOY = input( message: 'Should we deploy?', parameters: [
                   booleanParam(name: 'DEPLOY', defaultValue: false, description: 'If true, we will deploy.')
                 ])
-                //env.DEPLOY = INPUT_PARAMS.DEPLOY
               }
             }
           }
@@ -113,16 +112,49 @@ pipeline {
       }
     }
 
-    stage('Deploy Build') {
+    stage('Gather Deployment Parameters') {
       when {
         expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       steps {
         script {
-          env.COMMITLOG = readFile(file: "$ARTIFACTS/commitlog.txt")
-          env.VERSION = sh 'git describe --tags --abbrev=0'
-        }
+          try {
+            timeout(time: 15, unit: 'MINUTES') {
+              script {
+                env.COMMITLOG = readFile(file: "$ARTIFACTS/commitlog.txt")
+                env.VERSION = powershell(returnStdout: true, script: 'if (git tag -l) { git describe --tags --abbrev=0 }')
 
+                def INPUT_PARAMS = input( message: 'Enter Deployment Parameters', parameters: [
+                  string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
+                  string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
+                  text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
+                  booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
+                ])
+                env.RELEASE_VERSION = INPUT_PARAMS.RELEASE_VERSION
+                env.RELEASE_NAME = INPUT_PARAMS.RELEASE_NAME
+                env.RELEASE_BODY = INPUT_PARAMS.RELEASE_BODY
+                env.RELEASE_PRE = INPUT_PARAMS.RELEASE_PRE
+              }
+            }
+          }
+          catch(err) { // timeout reached or input Aborted
+              def user = err.getCauses()[0].getUser()
+                  if('SYSTEM' == user.toString()) { // SYSTEM means timeout
+                      echo ("Input timeout expired, default parameters will be used.")
+                  } else {
+                      echo "Input aborted by: [${user}]"
+                      error("Pipeline aborted by: [${user}]")
+                  }
+          }
+        }
+      }
+    }
+
+    stage('Deploy Build') {
+      when {
+        expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
+      }
+      steps {
         build(job: '/RELEASE-Unity3D-Jenkins', parameters: [
           string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
           string(name: 'RELEASE_BRANCH', defaultValue: env.BRANCH_NAME, description: 'Branch for release'),
