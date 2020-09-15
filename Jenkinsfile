@@ -76,6 +76,7 @@ pipeline {
               Move-Item -Path 'CI/release_upload.sh' -Destination $env:ARTIFACTS
             ''')
           }
+          currentBuild.result = "SUCCESS"
         }
         
         dir("${ARTIFACTS}") {
