@@ -84,7 +84,7 @@ pipeline {
       }
     }
 
-    stage('Gather Deployment Parameters') {
+    stage('Deploy?') {
       when {
         expression { env.BRANCH_NAME == "master"}
       }
