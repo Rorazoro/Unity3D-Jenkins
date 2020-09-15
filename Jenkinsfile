@@ -121,13 +121,13 @@ pipeline {
           try {
             timeout(time: 15, unit: 'MINUTES') {
               script {
-                env.COMMITLOG = readFile(file: "$ARTIFACTS/commitlog.txt")
+                //env.COMMITLOG = readFile(file: "$ARTIFACTS/commitlog.txt")
                 env.VERSION = powershell(returnStdout: true, script: 'if (git tag -l) { git describe --tags --abbrev=0 }')
 
                 def INPUT_PARAMS = input( message: 'Enter Deployment Parameters', parameters: [
                   string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
                   string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
-                  text(name: 'RELEASE_BODY', defaultValue: env.COMMITLOG, description: 'Message body for release'),
+                  text(name: 'RELEASE_BODY', defaultValue: readFile(file: "$ARTIFACTS/commitlog.txt"), description: 'Message body for release'),
                   booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
                 ])
                 env.RELEASE_VERSION = INPUT_PARAMS.RELEASE_VERSION
