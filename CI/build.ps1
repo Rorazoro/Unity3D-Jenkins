@@ -16,7 +16,7 @@ Start-Process -FilePath $UNITY_EXECUTABLE -ArgumentList @"
     -customBuildName $BUILD_NAME
     -customBuildPath "$BUILD_PATH"
     -executeMethod BuildCommand.PerformBuild
-    -logFile buildlog.log
+    -logFile "$BUILD_TARGET.buildlog.log"
 "@
 
 # Wait for Editor.log to be created.
