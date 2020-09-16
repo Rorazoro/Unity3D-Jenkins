@@ -12,4 +12,4 @@ else {
     $GIT_RELEASE_NOTES = git log --pretty=format:"%h %s"
 }
 
-Out-File -FilePath "$ARTIFACTS\commitlog.txt" -InputObject $GIT_RELEASE_NOTES
+Out-File -FilePath "$ARTIFACTS\commitlog.txt" -InputObject $GIT_RELEASE_NOTES -Encoding utf8
