@@ -126,7 +126,7 @@ pipeline {
                 def INPUT_PARAMS = input( message: 'Enter Deployment Parameters', parameters: [
                   string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
                   string(name: 'RELEASE_NAME', defaultValue: env.BUILD_TAG, description: 'Name for release'),
-                  text(name: 'RELEASE_BODY', defaultValue: readFile(file: "$ARTIFACTS/commitlog.txt"), description: 'Message body for release'),
+                  text(name: 'RELEASE_BODY', defaultValue: readFile(file: "$ARTIFACTS/commitlog.txt", encoding: "UTF-8"), description: 'Message body for release'),
                   booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
                 ])
                 env.RELEASE_VERSION = INPUT_PARAMS.RELEASE_VERSION
