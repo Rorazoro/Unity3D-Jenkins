@@ -125,7 +125,7 @@ pipeline {
 
                 def INPUT_PARAMS = input( message: 'Enter Deployment Parameters', parameters: [
                   string(name: 'RELEASE_VERSION', defaultValue: env.VERSION, description: 'Version of tag for release'),
-                  string(name: 'RELEASE_NAME', defaultValue: '${VERSION}-${BUILD_NUMBER}', description: 'Name for release'),
+                  string(name: 'RELEASE_NAME', defaultValue: env.BUILD_TAG, description: 'Name for release'),
                   text(name: 'RELEASE_BODY', defaultValue: readFile(file: "$ARTIFACTS/commitlog.txt"), description: 'Message body for release'),
                   booleanParam(name: 'RELEASE_PRE', defaultValue: true, description: 'Prerelease flag for release')
                 ])
@@ -154,7 +154,10 @@ pipeline {
         expression { return env.DEPLOY ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
       }
       steps {
-        build(job: '/RELEASE-Unity3D-Jenkins', propagate: false, parameters: [
+        build(job: 'Github_Release', propagate: false, wait: false, parameters: [
+          string(name: 'OWNER', value: 'rorazoro'),
+          string(name: 'REPO', value: env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')),
+          string(name: 'PROJECT_NAME', value: env.JOB_NAME),
           string(name: 'RELEASE_VERSION', value: env.RELEASE_VERSION),
           string(name: 'RELEASE_BRANCH', value: env.BRANCH_NAME),
           string(name: 'RELEASE_NAME', value: env.RELEASE_NAME),
