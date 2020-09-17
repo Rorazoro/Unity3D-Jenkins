@@ -1,9 +1,6 @@
 pipeline {
   agent {
-    node {
-      label 'Docker'
-      docker { image 'gableroux/unity3d:2020.1.5f1' }
-    }
+    docker { image 'gableroux/unity3d:2020.1.5f1' }
   }
   parameters {
     booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.')
@@ -13,7 +10,8 @@ pipeline {
   stages {
     stage('Docker Test') {
       steps {
-        println powershell(returnStdout: true, script: 'echo $env:UNITY_LICENSE_CONTENT')
+        // println powershell(returnStdout: true, script: 'echo $env:UNITY_LICENSE_CONTENT')
+        sh(returnStdout: true, script: 'ls -all')
       }
     }
     // stage('Build: StandaloneWindows64') {
