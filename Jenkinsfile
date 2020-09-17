@@ -23,7 +23,7 @@ pipeline {
         BUILD_TARGET = 'StandaloneWindows64'
       }
       steps {
-        println powershell(returnStdout: true, script: './CI/docker_build.ps1')
+        println powershell(returnStdout: true, script: './CI/docker_build.ps1 $env:BUILD_NAME $env:UNITY_LICENSE_CONTENT $env:BUILD_TARGET $env:IMAGE_NAME')
       }
     }
   }
