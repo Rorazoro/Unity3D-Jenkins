@@ -1,10 +1,7 @@
 pipeline {
   agent {
-    docker { 
-      image 'gableroux/unity3d:2020.1.5f1'
-      // args '''
-      //   -v "$(pwd):/root/project"
-      // '''
+    node {
+      label 'Docker'
     }
   }
   parameters {
@@ -15,7 +12,11 @@ pipeline {
   stages {
     stage('Docker Test') {
       steps {
-        sh ('ls -all')
+        powershell ('''
+          docker run -it --rm \
+          -v "$(pwd):/root/project" \
+          gableroux/unity3d:$UNITY_VERSION \
+        ''')
       }
     }
   }
@@ -25,7 +26,7 @@ pipeline {
   //   }
   // }
   environment {
-    UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.5f1/Editor/Unity.exe"
+    UNITY_VERSION = '2020.1.5f1'
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
     ARTIFACTS = "${PROJECT_PATH}/_artifacts"
