@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Docker Test') {
       steps {
-        println "$env:UNITY_LICENSE_CONTENT"
+        println powershell(returnStdout: true, script: 'echo $env:UNITY_LICENSE_CONTENT')
       }
     }
     stage('Build: StandaloneWindows64') {
