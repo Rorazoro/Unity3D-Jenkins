@@ -13,7 +13,7 @@ pipeline {
     stage('Docker Test') {
       steps {
         powershell ('''
-          docker run -it --rm -v "$(pwd):/root/project" gableroux/unity3d:$UNITY_VERSION \
+          docker run -it --rm -v "${WORKSPACE}:/root/project" gableroux/unity3d:${UNITY_VERSION} \
         ''')
       }
     }
