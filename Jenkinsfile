@@ -1,6 +1,9 @@
 pipeline {
   agent {
-    docker { image 'gableroux/unity3d:2020.1.5f1' }
+    docker { 
+      image 'gableroux/unity3d:2020.1.5f1'
+      args '-e WORKDIR=/root/project -v $PROJECT_PATH:/root/project'
+    }
   }
   parameters {
     booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'If true, we will run StandaloneWindows64 build.')
