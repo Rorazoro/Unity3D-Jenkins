@@ -2,6 +2,7 @@ pipeline {
   agent {
     node {
       label 'Docker'
+      docker { image 'gableroux/unity3d:2020.1.5f1' }
     }
   }
   parameters {
@@ -15,17 +16,17 @@ pipeline {
         println powershell(returnStdout: true, script: 'echo $env:UNITY_LICENSE_CONTENT')
       }
     }
-    stage('Build: StandaloneWindows64') {
-      when {
-        expression { return params.BUILD_WINDOWS ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
-      }
-      environment {
-        BUILD_TARGET = 'StandaloneWindows64'
-      }
-      steps {
-        println powershell(returnStdout: true, script: './CI/docker_build.ps1 $env:BUILD_NAME $env:UNITY_LICENSE_CONTENT $env:BUILD_TARGET $env:IMAGE_NAME')
-      }
-    }
+    // stage('Build: StandaloneWindows64') {
+    //   when {
+    //     expression { return params.BUILD_WINDOWS ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
+    //   }
+    //   environment {
+    //     BUILD_TARGET = 'StandaloneWindows64'
+    //   }
+    //   steps {
+    //     println powershell(returnStdout: true, script: './CI/docker_build.ps1 $env:BUILD_NAME $env:UNITY_LICENSE_CONTENT $env:BUILD_TARGET $env:IMAGE_NAME')
+    //   }
+    // }
   }
   // post {
   //   always {
