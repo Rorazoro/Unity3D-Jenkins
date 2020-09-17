@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker { 
       image 'gableroux/unity3d:2020.1.5f1'
-      args '-e WORKDIR=/root/project -v $PROJECT_PATH:/root/project'
+      args '-w /project/ -v ${PROJECT_PATH}:/project/'
     }
   }
   parameters {
