@@ -10,11 +10,11 @@ pipeline {
     booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
   }
   stages {
-    // stage('Docker Test') {
-    //   steps {
-    //     println powershell(returnStdout: true, script: './CI/unitydocker.ps1 $env:UNITY_VERSION $env:PROJECT_PATH')
-    //   }
-    // }
+    stage('Docker Test') {
+      steps {
+        println '$env:UNITY_LICENSE_CONTENT'
+      }
+    }
     stage('Build: StandaloneWindows64') {
       when {
         expression { return params.BUILD_WINDOWS ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/ }
