@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Docker Test') {
       steps {
-        println powershell(returnStdout: true, script: '.\CI\unitydocker.ps1 "2020.1.5f1" "$(pwd)"')
+        println powershell(returnStdout: true, script: './CI/unitydocker.ps1 $env:UNITY_VERSION $env:PROJECT_PATH')
       }
     }
   }
