@@ -12,9 +12,7 @@ pipeline {
   stages {
     stage('Docker Test') {
       steps {
-        powershell ('''
-          docker run -it --rm -v "${WORKSPACE}:/root/project" gableroux/unity3d:${UNITY_VERSION} \
-        ''')
+        println powershell(returnStdout: true, script: 'docker run -it --rm -v "$env.WORKSPACE:/root/project" gableroux/unity3d:$env.UNITY_VERSION}')
       }
     }
   }
