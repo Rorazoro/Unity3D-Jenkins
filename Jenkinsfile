@@ -33,7 +33,7 @@ pipeline {
   //   }
   // }
   environment {
-    UNITY_VERSION = '2020.1.5f1'
+    IMAGE_NAME = 'gableroux/unity3d:2020.1.5f1'
     UNITY_LICENSE_CONTENT = credentials('UnityLicense')
     PROJECT_PATH = "${WORKSPACE}"
     BUILD_NAME = "Unity3D-Jenkins"
