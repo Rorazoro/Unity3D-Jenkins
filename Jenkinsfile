@@ -13,7 +13,11 @@ pipeline {
     booleanParam(name: 'BUILD_WEB', defaultValue: true, description: 'If true, we will run WebGL build.')
   }
   stages {
-    sh ('ls -all')
+    stage('Docker Test') {
+      steps {
+        sh ('ls -all')
+      }
+    }
   }
   post {
     always {
