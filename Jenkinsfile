@@ -2,9 +2,9 @@ pipeline {
   agent {
     docker { 
       image 'gableroux/unity3d:2020.1.5f1'
-      args '''
-        -v "$(pwd):/root/project"
-      '''
+      // args '''
+      //   -v "$(pwd):/root/project"
+      // '''
     }
   }
   parameters {
@@ -19,11 +19,11 @@ pipeline {
       }
     }
   }
-  post {
-    always {
-      cleanWs()
-    }
-  }
+  // post {
+  //   always {
+  //     cleanWs()
+  //   }
+  // }
   environment {
     UNITY_EXECUTABLE = "D:/Program Files/Unity Editors/2020.1.5f1/Editor/Unity.exe"
     PROJECT_PATH = "${WORKSPACE}"
